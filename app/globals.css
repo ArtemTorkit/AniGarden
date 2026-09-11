@@ -1,0 +1,38 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+}
+
+body {
+  @apply bg-slate-950 text-slate-100 antialiased;
+}
+
+@keyframes garden-float {
+  0%, 100% { transform: translate3d(0, 12px, 0) rotate(-8deg); opacity: 0.35; }
+  50% { transform: translate3d(18px, -18px, 0) rotate(18deg); opacity: 0.9; }
+}
+
+@keyframes garden-drift {
+  0% { transform: translate3d(-20px, 18px, 0) scale(0.7); opacity: 0; }
+  35%, 70% { opacity: 0.8; }
+  100% { transform: translate3d(24px, -24px, 0) scale(1.15); opacity: 0; }
+}
+
+@keyframes garden-orbit {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes rarity-shine {
+  0%, 100% { transform: scale(0.88) rotate(0deg); opacity: 0.45; }
+  50% { transform: scale(1.08) rotate(180deg); opacity: 0.95; }
+}
+
+@keyframes character-reveal {
+  0% { opacity: 0; transform: scale(0.78); }
+  70% { opacity: 1; transform: scale(1.04); }
+  100% { opacity: 1; transform: scale(1); }
+}
