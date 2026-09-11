@@ -22,6 +22,7 @@ package-lock.json
 .env.development.local
 .env.test.local
 .env.production.local
+.env.prod
 
 # Logs
 logs
@@ -52,3 +53,6 @@ coverage/
 # Optional: lockfiles (uncomment if you want to ignore lockfiles)
 # yarn.lock
 # pnpm-lock.yaml
+
+# Sentry Config File
+.env.sentry-build-plugin
