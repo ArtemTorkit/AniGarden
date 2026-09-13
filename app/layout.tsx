@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Analytics } from "@vercel/analytics/react";
 import SiteFooter from "@/components/SiteFooter";
 import AuthPromptProvider from "@/components/AuthPromptProvider";
 import "./globals.css";
@@ -21,7 +22,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body><AuthPromptProvider>{children}<SiteFooter /></AuthPromptProvider></body>
+      <body><AuthPromptProvider>{children}<SiteFooter /></AuthPromptProvider><Analytics /></body>
     </html>
   );
 }
