@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useAuthPrompt } from "@/components/AuthPromptProvider";
 import { calculateGemsFromUsdCents } from "@/lib/billing/buymeacoffee";
-import { isLaunchPromotionActive, LAUNCH_PROMOTION_ENDS_AT, MIN_PURCHASE_AMOUNT_CENTS } from "@/lib/gacha/economy";
+import { GEMS_PER_USD, FIFTEEN_DOLLAR_BONUS_GEMS, TEN_DOLLAR_BONUS_GEMS, isLaunchPromotionActive, LAUNCH_PROMOTION_ENDS_AT, MIN_PURCHASE_AMOUNT_CENTS } from "@/lib/gacha/economy";
 
 export default function BuyMeACoffeePurchase({ paymentUrl }: { paymentUrl: string | null }) {
   const [amountUsd, setAmountUsd] = useState("5");
@@ -14,8 +14,8 @@ export default function BuyMeACoffeePurchase({ paymentUrl }: { paymentUrl: strin
   const { openLoginPrompt } = useAuthPrompt();
 
   const amountCents = Math.round(Number(amountUsd) * 100);
-  const previewGems = calculateGemsFromUsdCents(amountCents);
-  const minimumPurchaseGems = calculateGemsFromUsdCents(MIN_PURCHASE_AMOUNT_CENTS);
+  const previewGems = Math.floor((amountCents * GEMS_PER_USD)/100) + (amountCents >= 1500 ? FIFTEEN_DOLLAR_BONUS_GEMS : amountCents >= 1000 ? TEN_DOLLAR_BONUS_GEMS : 0);
+  const minimumPurchaseGems = Math.floor((MIN_PURCHASE_AMOUNT_CENTS * GEMS_PER_USD) / 100);
   const promotionActive = isLaunchPromotionActive();
 
   async function beginPurchase() {
