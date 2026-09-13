@@ -18,11 +18,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { path: "/payments", priority: 0.5, changeFrequency: "monthly" as const },
   ];
 
-  const bannerPages: MetadataRoute.Sitemap = (banners ?? []).map(({ slug }) => ({
-    url: `${baseUrl}/gacha/${slug}`,
-    priority: 0.8,
-    changeFrequency: "weekly" as const,
-  }));
+  const bannerPages: MetadataRoute.Sitemap = (banners ?? []).map(
+    ({ slug }) => ({
+      url: `${baseUrl}/gacha/${slug}`,
+      priority: 0.8,
+      changeFrequency: "weekly" as const,
+    }),
+  );
 
   const staticSitemap = staticPages.map(({ path, ...page }) => ({
     url: `${baseUrl}${path ?? ""}`,
