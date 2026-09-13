@@ -2,6 +2,7 @@ import AppHeader from "@/components/AppHeader";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { hasDailyPullAvailable } from "@/lib/gacha/daily";
 import BuyMeACoffeePurchase from "@/components/BuyMeACoffeePurchase";
+import PromoCodeRedeemer from "@/components/PromoCodeRedeemer";
 
 export const metadata = { title: "Gem Shop — AniGarden" };
 
@@ -26,6 +27,7 @@ export default async function BillingPage() {
             <h1 className="mt-3 text-4xl font-bold text-white sm:text-5xl">Keep your garden growing.</h1>
             <p className="mt-4 text-base leading-7 text-slate-300">Green gems are AniGarden’s in-game currency. Use them to plant character pulls.</p>
           <BuyMeACoffeePurchase paymentUrl={process.env.BUYMEACOFFEE_PAGE_URL ?? null} />
+          <PromoCodeRedeemer />
           <p className="mt-5 text-left text-xs leading-5 text-slate-500">Gems and characters are closed-loop digital items with no cash-out or real-world monetary value. See <a href="/payments" className="text-lime-300 hover:text-lime-200">payments and refunds</a>.</p>
           </div>
         </section>

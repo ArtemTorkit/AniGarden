@@ -7,6 +7,7 @@ import ProfileSettings from "@/components/ProfileSettings";
 import { hasDailyPullAvailable } from "@/lib/gacha/daily";
 import { getCharacterOwnerCounts } from "@/lib/gacha/supply";
 import { LoginPromptButton } from "@/components/AuthPromptProvider";
+import ReferralInviteCard from "@/components/ReferralInviteCard";
 
 export const metadata = { title: "My Profile — AniGarden" };
 
@@ -54,6 +55,7 @@ export default async function ProfilePage() {
       <div className="mx-auto max-w-5xl">
         <AppHeader gemBalance={gemBalance} dailyPullAvailable={dailyPullAvailable} userName={nickname} avatarUrl={avatarUrl} />
         <section className="mt-8"><ProfileSettings nickname={nickname} avatarUrl={avatarUrl} hideInventory={hideInventory} /></section>
+        <ReferralInviteCard />
         {dailyPullAvailable ? <Link href="/gacha/daily-sprout" className="mt-6 flex items-center justify-between rounded-2xl border border-red-300/20 bg-red-950/20 px-4 py-3 text-sm transition hover:border-red-300/50"><span><span className="mr-2 inline-block h-2 w-2 rounded-full bg-red-400" /><span className="font-semibold text-red-100">Your daily pull is ready</span><span className="ml-2 text-red-200/70">Claim it before the day ends.</span></span><span className="font-semibold text-red-200">Go to gacha →</span></Link> : null}
         <ProfileInventorySection items={items} rarityCounts={rarityCounts} ownerCounts={ownerCounts} gardenValue={storedProfile?.garden_value ?? 0} />
       </div>

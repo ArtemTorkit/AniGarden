@@ -22,7 +22,7 @@ export async function POST(request: Request) {
     const amountUsd = Number(body.amountUsd);
     const amountCents = Math.round(amountUsd * 100);
     if (!Number.isFinite(amountUsd) || !Number.isFinite(amountCents) || amountCents < MIN_BUY_ME_A_COFFEE_AMOUNT_CENTS || amountCents > MAX_BUY_ME_A_COFFEE_AMOUNT_CENTS) {
-      return NextResponse.json({ error: "Choose an amount between $1.00 and $500.00" }, { status: 400 });
+      return NextResponse.json({ error: "Choose an amount between $4.00 and $500.00" }, { status: 400 });
     }
     const gems = calculateGemsFromUsdCents(amountCents);
 

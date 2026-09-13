@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { createSupabaseBrowserClient } from "@/lib/supabase/browser";
+import { isValidPromoCodeFormat, normalizePromoCode } from "@/lib/gacha/promo-codes";
 
 type Provider = "google";
 
@@ -15,10 +16,14 @@ export default function LoginPage() {
 
     try {
       const supabase = createSupabaseBrowserClient();
+      const referralCode = normalizePromoCode(new URL(window.location.href).searchParams.get("ref"));
+      const callbackUrl = new URL("/auth/callback", window.location.origin);
+      callbackUrl.searchParams.set("next", "/dashboard");
+      if (isValidPromoCodeFormat(referralCode)) callbackUrl.searchParams.set("ref", referralCode);
       const { error: signInError } = await supabase.auth.signInWithOAuth({
         provider,
         options: {
-          redirectTo: `${window.location.origin}/auth/callback?next=/dashboard`,
+          redirectTo: callbackUrl.toString(),
         },
       });
 

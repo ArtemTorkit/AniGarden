@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { consumeRateLimit } from "@/lib/security/rate-limit";
+import { isSupportedPaidPullCount } from "@/lib/gacha/pulls";
 
 export const runtime = "nodejs";
 
@@ -33,7 +34,7 @@ export async function POST(request: Request) {
     const body = (await request.json().catch(() => ({}))) as { bannerSlug?: string; count?: number };
     if (!body.bannerSlug) return NextResponse.json({ error: "Banner is required" }, { status: 400 });
     const count = body.count ?? 1;
-    if (count !== 1 && count !== 10) return NextResponse.json({ error: "Pull count must be 1 or 10" }, { status: 400 });
+    if (!isSupportedPaidPullCount(count)) return NextResponse.json({ error: "Pull count must be 1, 5, or 10" }, { status: 400 });
 
     const admin = createSupabaseAdminClient();
     const { data: banner, error: bannerError } = await admin

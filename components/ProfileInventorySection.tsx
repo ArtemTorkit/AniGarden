@@ -19,7 +19,7 @@ export default function ProfileInventorySection({ items, rarityCounts, ownerCoun
         </div>
         <GardenPrestigeGuide />
       </section>
-      <section className="mt-10"><h2 className="text-2xl font-bold text-white">Inventory</h2><InventoryGrid key={selectedRarity} items={items} initialRarityFilter={selectedRarity} ownerCounts={ownerCounts} /></section>
+      <section className="mt-10"><h2 className="text-2xl font-bold text-white">Inventory</h2><InventoryGrid key={selectedRarity} items={items} initialRarityFilter={selectedRarity} ownerCounts={ownerCounts} canSell /></section>
     </>
   );
 }

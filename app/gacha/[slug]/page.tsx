@@ -4,26 +4,11 @@ import { createSupabaseServerClient } from "@/lib/supabase/server";
 import AppHeader from "@/components/AppHeader";
 import PlantPullExperience from "@/components/PlantPullExperience";
 import { hasDailyPullAvailable } from "@/lib/gacha/daily";
-import RarityLabel from "@/components/RarityLabel";
 import { getCharacterOwnerCounts } from "@/lib/gacha/supply";
+import { getCardValue } from "@/lib/gacha/value";
+import GachaCharacterCatalog, { type GachaCatalogCharacter } from "@/components/GachaCharacterCatalog";
 
-type Character = { id: string; name: string; rarity: string; image_url: string };
-
-const rarityCardStyles: Record<string, string> = {
-  common: "border-slate-700 shadow-slate-950/30",
-  uncommon: "border-lime-500/50 shadow-lime-950/30",
-  rare: "border-sky-400/50 shadow-sky-950/30",
-  epic: "border-fuchsia-400/50 shadow-fuchsia-950/30",
-  legendary: "border-amber-300/70 shadow-amber-950/40",
-};
-
-const rarityBadgeStyles: Record<string, string> = {
-  common: "border-slate-600 bg-slate-800/90 text-slate-300",
-  uncommon: "border-lime-500/40 bg-lime-950/80 text-lime-300",
-  rare: "border-sky-400/40 bg-sky-950/80 text-sky-300",
-  epic: "border-fuchsia-400/40 bg-fuchsia-950/80 text-fuchsia-300",
-  legendary: "border-amber-300/50 bg-amber-950/80 text-amber-200",
-};
+type Character = { id: string; name: string; rarity: string; subculture?: string | null; image_url: string };
 
 const rarityOrder: Record<string, number> = {
   common: 0,
@@ -47,7 +32,7 @@ export default async function GachaBannerPage({ params }: { params: { slug: stri
   const { data: pool } = await supabase.from("gacha_banner_characters").select("character_id").eq("banner_id", banner.id);
   const ids = (pool ?? []).map((entry) => entry.character_id);
   const { data: characters } = ids.length
-    ? await supabase.from("Characters").select("id, name, rarity, image_url").in("id", ids)
+    ? await supabase.from("Characters").select("id, name, rarity, subculture, image_url").in("id", ids)
     : { data: [] as Character[] };
   const sortedCharacters = [...(characters ?? [])].sort((a, b) => {
     const rarityDifference = (rarityOrder[a.rarity.toLowerCase()] ?? 999) - (rarityOrder[b.rarity.toLowerCase()] ?? 999);
@@ -62,6 +47,7 @@ export default async function GachaBannerPage({ params }: { params: { slug: stri
   const gemBalance = (gemTransactions ?? []).reduce((sum, transaction) => sum + transaction.amount, 0);
   const dailyPullAvailable = user ? await hasDailyPullAvailable(supabase, user.id) : false;
   const ownerCounts = await getCharacterOwnerCounts(ids);
+  const catalogCharacters: GachaCatalogCharacter[] = sortedCharacters.map((character) => ({ ...character, gardenValue: getCardValue(character.rarity), ownerCount: ownerCounts[character.id] ?? 0 }));
 
   return (
     <main className="min-h-screen bg-garden-950 px-6 py-8 sm:px-10">
@@ -85,14 +71,7 @@ export default async function GachaBannerPage({ params }: { params: { slug: stri
 
         <section className="mt-12">
           <p className="text-sm font-semibold uppercase tracking-[0.2em] text-lime-300">This garden contains</p>
-          <div className="mt-5 grid gap-5 sm:grid-cols-3">
-            {sortedCharacters.map((character) => (
-              <article key={character.id} className={`overflow-hidden rounded-2xl border bg-slate-900 shadow-lg ${rarityCardStyles[character.rarity] ?? rarityCardStyles.common}`}>
-                <div className="relative aspect-square bg-garden-900"><img src={character.image_url} alt={character.name} className="h-full w-full object-cover" /><span className={`absolute left-3 top-3 rounded-full border px-2 py-1 text-[10px] font-bold uppercase tracking-wider backdrop-blur-md ${rarityBadgeStyles[character.rarity] ?? rarityBadgeStyles.common}`}><RarityLabel rarity={character.rarity} className="text-inherit" /></span></div>
-                <div className="p-4"><h2 className="font-semibold text-white">{character.name}</h2><p className="mt-1 text-xs uppercase tracking-wider text-slate-500">Available in this pool</p><p className="mt-2 text-xs text-slate-400">Owned by {ownerCounts[character.id] ?? 0} {ownerCounts[character.id] === 1 ? "gardener" : "gardeners"}</p></div>
-              </article>
-            ))}
-          </div>
+          <GachaCharacterCatalog characters={catalogCharacters} />
         </section>
       </div>
     </main>
